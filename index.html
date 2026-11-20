@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Transparansi & Donasi Pembangunan Masjid Al Barokah</title>
+  <style>
+    :root {
+      --primary: #0f766e;
+      --primary-dark: #115e59;
+      --wa-color: #16a34a;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 16px 16px 96px;
+    }
+    .container { max-width: 800px; margin: 0 auto; }
+    header {
+      background: var(--primary);
+      color: #fff;
+      padding: 28px 20px;
+      border-radius: 12px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    header h1 { font-size: 1.6rem; margin-bottom: 6px; }
+    header p { opacity: 0.92; font-size: 0.95rem; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .card h2 {
+      font-size: 1.2rem;
+      margin-bottom: 12px;
+      color: var(--primary-dark);
+      border-bottom: 2px solid var(--bg);
+      padding-bottom: 8px;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .stat-box {
+      background: var(--bg);
+      padding: 14px;
+      border-radius: 8px;
+      border-left: 4px solid var(--primary);
+    }
+    .stat-box span { display: block; font-size: 0.85rem; color: var(--muted); }
+    .stat-box strong { font-size: 1.25rem; }
+    .progress-wrap {
+      background: #e2e8f0;
+      border-radius: 999px;
+      height: 18px;
+      overflow: hidden;
+      margin: 8px 0;
+    }
+    .progress-bar {
+      background: var(--primary);
+      height: 100%;
+      width: 45%;
+      text-align: center;
+      color: #fff;
+      font-size: 0.75rem;
+      line-height: 18px;
+    }
+
+    /* Area Donasi: Rekening & QRIS */
+    .donasi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-top: 12px;
+      align-items: start;
+    }
+    .rek-box {
+      background: #f0fdfa;
+      border: 1px dashed var(--primary);
+      padding: 16px;
+      border-radius: 10px;
+    }
+    .rek-number {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      letter-spacing: 0.5px;
+      margin: 6px 0;
+    }
+    .copy-inline-btn {
+      margin-top: 10px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .qris-box {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      padding: 14px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    .qris-box img {
+      width: 100%;
+      max-width: 240px;
+      height: auto;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin-bottom: 8px;
+    }
+    .qris-caption {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .security-note {
+      margin-top: 14px;
+      padding: 12px;
+      background: #fffbeb;
+      border-left: 4px solid #f59e0b;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      color: #78350f;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      margin-top: 10px;
+    }
+    th, td {
+      text-align: left;
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    th { background: var(--bg); color: var(--muted); }
+    .masuk { color: #059669; font-weight: 600; }
+    .keluar { color: #dc2626; font-weight: 600; }
+    footer {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 24px;
+    }
+
+    /* === TOOLS MENGAMBANG (FLOATING TOOLBAR) === */
+    .floating-tools {
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.15);
+      border-radius: 999px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      z-index: 999;
+      max-width: 96vw;
+      overflow-x: auto;
+    }
+    .tool-btn {
+      border: none;
+      background: var(--bg);
+      color: var(--text);
+      padding: 9px 12px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+      transition: transform 0.15s ease;
+    }
+    .tool-btn:active { transform: scale(0.96); }
+    .tool-btn.primary {
+      background: var(--primary);
+      color: #fff;
+    }
+    .tool-btn.wa {
+      background: var(--wa-color);
+      color: #fff;
+    }
+
+    /* Notifikasi Toast */
+    .toast {
+      position: fixed;
+      bottom: 78px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1e293b;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      z-index: 1000;
+    }
+    .toast.show { opacity: 1; }
+  </style>
+</head>
+<body id="atas">
+  <div class="container">
+    <header>
+      <h1>Pembangunan Masjid Al Barokah</h1>
+      <p>Portal Informasi Donasi & Transparansi Keuangan Panitia</p>
+    </header>
+
+    <!-- Ringkasan Dana -->
+    <section class="card">
+      <h2>Progres & Kebutuhan Dana</h2>
+      <div class="stats">
+        <div class="stat-box">
+          <span>Total Kebutuhan</span>
+          <strong>Rp 500.000.000</strong>
+        </div>
+        <div class="stat-box">
+          <span>Dana Terkumpul</span>
+          <strong>Rp 225.000.000</strong>
+        </div>
+        <div class="stat-box">
+          <span>Dana Terpakai</span>
+          <strong>Rp 180.000.000</strong>
+        </div>
+      </div>
+      <p><strong>Progres Pendanaan (45%)</strong></p>
+      <div class="progress-wrap">
+        <div class="progress-bar">45%</div>
+      </div>
+    </section>
+
+    <!-- Informasi Rekening & QRIS Donasi -->
+    <section class="card" id="donasi">
+      <h2>Saluran Donasi Resmi</h2>
+      <p>Jamaah dan donatur dapat menyalurkan infak/wakaf pembangunan melalui transfer bank atau pemindaian QRIS resmi berikut:</p>
+
+      <div class="donasi-grid">
+        <!-- Rekening Bank -->
+        <div class="rek-box">
+          <p><strong>Bank Mandiri</strong></p>
+          <div class="rek-number" id="no-rek">1340031912743</div>
+          <p>a.n. <strong>DILKARIM</strong><br><small>(Bendahara Panitia Pembangunan)</small></p>
+          <button class="copy-inline-btn" onclick="salinRekening()">📋 Salin Nomor Rekening</button>
+          <p style="margin-top: 14px; font-size: 0.9rem;">
+            Konfirmasi & Bukti Transfer:<br>
+            <strong>WA: 0838-2111-0706</strong>
+          </p>
+        </div>
+
+        <!-- QRIS -->
+        <div class="qris-box" id="qris">
+          <img src="qris-masjid.png" alt="QRIS Masjid Al Barokah" />
+          <div class="qris-caption">
+            <strong>QRIS: MASJID AL BAROKAH</strong><br>
+            NMID: ID1025453093722<br>
+            Mendukung semua M-Banking & E-Wallet
+          </div>
+        </div>
+      </div>
+
+      <div class="security-note">
+        <strong>Catatan Keamanan:</strong> Pastikan nama penerima tertera <strong>DILKARIM</strong> (untuk transfer Bank Mandiri) atau <strong>MASJID AL BAROKAH</strong> (untuk QRIS). Waspadai pihak yang mengatasnamakan panitia di luar nomor kontak resmi di atas.
+      </div>
+    </section>
+
+    <!-- Laporan Transparansi -->
+    <section class="card" id="laporan">
+      <h2>Laporan Mutasi Terakhir</h2>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Tanggal</th>
+              <th>Keterangan</th>
+              <th>Jenis</th>
+              <th>Nominal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>20 Nov 2026</td>
+              <td>Infak Hamba Allah (Transfer Mandiri)</td>
+              <td class="masuk">Pemasukan</td>
+              <td class="masuk">+ Rp 2.500.000</td>
+            </tr>
+            <tr>
+              <td>18 Nov 2026</td>
+              <td>Pembelian Semen & Pasir</td>
+              <td class="keluar">Pengeluaran</td>
+              <td class="keluar">- Rp 4.250.000</td>
+            </tr>
+            <tr>
+              <td>15 Nov 2026</td>
+              <td>Infak via QRIS Masjid Al Barokah</td>
+              <td class="masuk">Pemasukan</td>
+              <td class="masuk">+ Rp 1.850.000</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer>
+      <p>Panitia Pembangunan Masjid Al Barokah • Diperbarui berkala untuk transparansi umat.</p>
+    </footer>
+  </div>
+
+  <!-- Notifikasi Toast -->
+  <div class="toast" id="toast">No. Rekening Mandiri (1340031912743) disalin!</div>
+
+  <!-- Floating Tools Bar -->
+  <nav class="floating-tools" aria-label="Menu Cepat">
+    <button class="tool-btn primary" onclick="salinRekening()">📋 Salin Rek</button>
+    <a class="tool-btn" href="#qris">📱 QRIS</a>
+    <a class="tool-btn wa" href="https://wa.me/6283821110706?text=Assalamu'alaikum%20Pak%20Dilkarim,%20saya%20ingin%20konfirmasi%20donasi%20pembangunan%20Masjid%20Al%20Barokah." target="_blank" rel="noopener">💬 Konfirmasi WA</a>
+    <a class="tool-btn" href="#laporan">📊 Laporan</a>
+    <a class="tool-btn" href="#atas" title="Kembali ke atas">⬆️</a>
+  </nav>
+
+  <script>
+    function salinRekening() {
+      const noRek = document.getElementById('no-rek').innerText;
+      navigator.clipboard.writeText(noRek).then(() => {
+        const toast = document.getElementById('toast');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2500);
+      });
+    }
+  </script>
+</body>
+</html>
